@@ -62,4 +62,4 @@ dfm<-melt(df_merge, id=c("Subject","Activity"))
 # ominious function uesed to calcualte mean
 dfmean <-  dcast(dfm, Subject + Activity ~ variable, function(x)sum(x)/length(x))   
 ## Output it into a file
-write.table(dfmean, "data_summary.txt", sep="\t")
+write.table(dfmean, "data_summary.txt", sep="\t",row.name=FALSE )
