@@ -56,15 +56,10 @@ write.table(df_merge, "mean_std.txt", sep="\t")
 
 ## Get the the average of each variable for each activity and each subject
 ## The col 3 is the first valid measurement
-dfmean <- aggregate(df_merge[,3], by=list(df_merge$Activity, df_merge$Subject), FUN=mean)
-## Merging all the following measurement to the required data frame
-for(i in 4:ncol(df_merge)){
-  mean <- aggregate(df_merge[,i], by=list(Activity=df_merge$Activity, Subject=df_merge$Subject), FUN=mean)
-  dfmean<-cbind(dfmean,mean[,3])
-}
-## Re-organsize the data set as the final form
-names(dfmean)<-c("Activity","Subject",names(dfx_Keep))
-dfmean<-dfmean[c(2,1,3:ncol(dfmean))]
+library("reshape2")
+dfm<-melt(df_merge, id=c("Subject","Activity"))
+#use dcast to create the final, tidy, data set.
+# ominious function uesed to calcualte mean
+dfmean <-  dcast(dfm, Subject + Activity ~ variable, function(x)sum(x)/length(x))   
 ## Output it into a file
 write.table(dfmean, "data_summary.txt", sep="\t")
-
